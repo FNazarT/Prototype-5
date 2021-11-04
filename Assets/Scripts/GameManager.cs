@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -9,18 +8,29 @@ public class GameManager : MonoBehaviour
 {
     public bool isGameActive;
     public List<GameObject> targets;
-    public Button restartButton;
+    public GameObject gameOverPanel;
     public GameObject menuPanel;
-    public TextMeshProUGUI gameOverText;
+    public GameObject pausePanel;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI livesText;
 
+    private bool isgamePaused = false;
     private float spawnRate = 1.0f;
-    private int index = 0, score = 0;
+    private int index = 0, score = 0, lives = 3;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PauseGame();
+        }        
+    }
 
     public void StartGame(int difficulty)
     {
         spawnRate /= difficulty;
         menuPanel.SetActive(false);
+        livesText.text = "Lives: " + lives;
         isGameActive = true;
         StartCoroutine(nameof(SpawnTarget));
     }
@@ -31,10 +41,19 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: " + score;
     }
 
+    public void DecreaseLives(int livesToChange)
+    {
+            lives += livesToChange;
+            livesText.text = "Lives: " + lives;
+            if (lives == 0)
+            {
+                GameOver();
+            }
+    }
+
     public void GameOver()
     {
-        gameOverText.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(true);
+        gameOverPanel.SetActive(true);
         isGameActive = false;
     }
 
@@ -49,4 +68,19 @@ public class GameManager : MonoBehaviour
     }
 
     public void RestartGame() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+    private void PauseGame()
+    {
+        if (!isgamePaused)
+        {
+            isgamePaused = true;
+            pausePanel.SetActive(true);
+            Time.timeScale = 0f;
+            return;
+        }
+
+        isgamePaused = false;
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
+    }
 }

@@ -19,7 +19,7 @@ public class Target : MonoBehaviour
         targetRb.AddTorque(RandomTorque(), RandomTorque(), RandomTorque(), ForceMode.Impulse);
     }
 
-    private void OnMouseDown()
+    public void DestroyTarget()
     {
         if (gameManager.isGameActive)
         {
@@ -32,9 +32,9 @@ public class Target : MonoBehaviour
     private void OnTriggerEnter(Collider other) 
     {
         Destroy(gameObject);
-        if (gameObject.CompareTag("Good"))
+        if (gameObject.CompareTag("Good") && gameManager.isGameActive)
         {
-            gameManager.GameOver();
+            gameManager.DecreaseLives(-1);
         }
     } 
 
