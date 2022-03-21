@@ -31,11 +31,11 @@ public class Target : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) 
     {
-        Destroy(gameObject);
         if (gameObject.CompareTag("Good") && gameManager.isGameActive)
         {
             gameManager.DecreaseLives(-1);
         }
+        Destroy(gameObject);
     } 
 
     private Vector3 RandomPosition() => new Vector3(Random.Range(-xRange, xRange), yPosition, 0f);
